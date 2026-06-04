@@ -1,0 +1,17 @@
+{
+  "oxlint": {
+    "command": "bunx",
+    "args": ["oxlint", "--lsp"],
+    "extensionToLanguage": {
+      ".ts": "typescript",
+      ".tsx": "typescriptreact",
+      ".mts": "typescript",
+      ".cts": "typescript",
+      ".js": "javascript",
+      ".jsx": "javascriptreact",
+      ".mjs": "javascript",
+      ".cjs": "javascript",
+      ".astro": "astro"
+    }
+  }
+}

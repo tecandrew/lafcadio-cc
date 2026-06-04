@@ -1,0 +1,9 @@
+{
+  "ty": {
+    "command": "uvx",
+    "args": ["ty", "server"],
+    "extensionToLanguage": {
+      ".py": "python"
+    }
+  }
+}

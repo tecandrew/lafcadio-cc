@@ -1,0 +1,9 @@
+{
+  "ruff": {
+    "command": "uvx",
+    "args": ["ruff", "server", "--color", "never"],
+    "extensionToLanguage": {
+      ".py": "python"
+    }
+  }
+}

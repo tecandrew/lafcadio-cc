@@ -1,0 +1,61 @@
+{
+  "name": "lafcadio",
+  "owner": {
+    "name": "Andrew Tec",
+    "email": "contact@enjoi.dev"
+  },
+  "metadata": {
+    "description": "lafcadio's CC plugins",
+    "version": "1.0.0"
+  },
+  "plugins": [
+    {
+      "name": "ruff",
+      "description": "ruff lsp and hook",
+      "version": "1.0.0",
+      "author": {
+        "name": "Andrew Tec"
+      },
+      "source": "./plugins/ruff",
+      "category": "lsp",
+      "tags": ["python"],
+      "keywords": ["ruff"]
+    },
+    {
+      "name": "pyrefly",
+      "description": "pyrefly lsp",
+      "version": "1.0.0",
+      "author": {
+        "name": "Andrew Tec"
+      },
+      "source": "./plugins/pyrefly",
+      "category": "lsp",
+      "tags": ["python"],
+      "keywords": ["pyrefly"]
+    },
+    {
+      "name": "ty",
+      "description": "ty lsp",
+      "version": "1.0.0",
+      "author": {
+        "name": "Andrew Tec"
+      },
+      "source": "./plugins/ty",
+      "category": "lsp",
+      "tags": ["python"],
+      "keywords": ["ty"]
+    },
+    {
+      "name": "oxc",
+      "description": "oxc tools for JS/TS",
+      "version": "1.0.0",
+      "author": {
+        "name": "Andrew Tec"
+      },
+      "source": "./plugins/oxc",
+      "category": "lsp",
+      "tags": ["typescript", "javascript"],
+      "keywords": ["oxc", "oxfmt", "oxlint"]
+    }
+  ]
+}

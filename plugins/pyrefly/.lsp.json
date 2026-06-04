@@ -1,0 +1,9 @@
+{
+  "pyrefly": {
+    "command": "uvx",
+    "args": ["pyrefly", "lsp", "--color", "never"],
+    "extensionToLanguage": {
+      ".py": "python"
+    }
+  }
+}

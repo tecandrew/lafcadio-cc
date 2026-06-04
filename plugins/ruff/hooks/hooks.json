@@ -1,0 +1,21 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Edit(*.py)",
+            "command": "jq -r '.tool_input.file_path' | xargs -I{} uvx ruff check --fix {} >&2 || exit 2"
+          },
+          {
+            "type": "command",
+            "if": "Write(*.py)",
+            "command": "jq -r '.tool_input.file_path' | xargs -I{} uvx ruff check --fix {} >&2 || exit 2"
+          }
+        ]
+      }
+    ]
+  }
+}
