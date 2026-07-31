@@ -81,6 +81,15 @@ class CodexHookTests(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.commands(), [f"uvx\tpyrefly\tcheck\t{target.resolve()}"])
 
+    def test_ty_checks_python_edits(self) -> None:
+        target = self.project / "typed.py"
+        target.write_text("value: int = 1\n")
+
+        result = self.run_hook("ty", {"file_path": str(target)})
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(self.commands(), [f"uvx\tty\tcheck\t{target.resolve()}"])
+
     def test_oxc_lints_astro_without_formatting_it(self) -> None:
         names = ("app.ts", "View.vue", "Widget.svelte", "Page.astro", "notes.md")
         for name in names:

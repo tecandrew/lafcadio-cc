@@ -1,19 +1,18 @@
 # Lafcadio agent plugins
 
-One GitHub repository for Ruff, Pyrefly, and Oxc integrations across Claude
-Code, Codex, and OpenCode.
+One GitHub repository for Ruff, Pyrefly, Ty, and Oxc integrations across
+Claude Code, Codex, and OpenCode.
 
 | Plugin | Files | Behavior |
 | --- | --- | --- |
 | `ruff` | Python (`.py`, `.pyi`) | Ruff LSP where supported, formatting, and safe lint fixes |
 | `pyrefly` | Python (`.py`, `.pyi`) | Pyrefly LSP where supported and type diagnostics |
+| `ty` | Python (`.py`, `.pyi`) | Ty LSP where supported and type diagnostics |
 | `oxc` | JS/TS, Vue, Svelte, Astro | Oxlint LSP where supported, Oxfmt formatting, and safe lint fixes |
-
-The legacy `ty` LSP remains available to Claude Code only.
 
 ## Requirements
 
-- [uv](https://docs.astral.sh/uv/) for `uvx ruff` and `uvx pyrefly`
+- [uv](https://docs.astral.sh/uv/) for `uvx ruff`, `uvx pyrefly`, and `uvx ty`
 - [Bun](https://bun.sh/) for `bunx oxfmt` and `bunx oxlint`
 
 The first tool run may need network access. Project Ruff, Pyrefly, Oxfmt, and
@@ -21,7 +20,7 @@ Oxlint configuration is respected.
 
 ## Install from GitHub
 
-Install any subset of the three plugins. The examples below install all three.
+Install any subset of the four plugins. The examples below install all four.
 
 ### Claude Code
 
@@ -31,6 +30,7 @@ Add the GitHub repository as a marketplace, then install the plugins:
 claude plugin marketplace add tecandrew/lafcadio-cc
 claude plugin install ruff@lafcadio
 claude plugin install pyrefly@lafcadio
+claude plugin install ty@lafcadio
 claude plugin install oxc@lafcadio
 ```
 
@@ -45,6 +45,7 @@ Add the GitHub repository as a marketplace, then install the plugins:
 codex plugin marketplace add tecandrew/lafcadio-cc
 codex plugin add ruff@lafcadio
 codex plugin add pyrefly@lafcadio
+codex plugin add ty@lafcadio
 codex plugin add oxc@lafcadio
 ```
 
@@ -64,6 +65,7 @@ GitHub repository into OpenCode's global plugin directory:
 mkdir -p ~/.config/opencode/plugins
 curl -fsSLo ~/.config/opencode/plugins/lafcadio-ruff.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ruff.ts
 curl -fsSLo ~/.config/opencode/plugins/lafcadio-pyrefly.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/pyrefly.ts
+curl -fsSLo ~/.config/opencode/plugins/lafcadio-ty.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ty.ts
 curl -fsSLo ~/.config/opencode/plugins/lafcadio-oxc.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/oxc.ts
 ```
 
@@ -74,6 +76,7 @@ directory:
 mkdir -p .opencode/plugins
 curl -fsSLo .opencode/plugins/lafcadio-ruff.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ruff.ts
 curl -fsSLo .opencode/plugins/lafcadio-pyrefly.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/pyrefly.ts
+curl -fsSLo .opencode/plugins/lafcadio-ty.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ty.ts
 curl -fsSLo .opencode/plugins/lafcadio-oxc.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/oxc.ts
 ```
 
@@ -92,12 +95,14 @@ not formatted by Oxfmt.
 claude plugin marketplace update lafcadio
 claude plugin update ruff@lafcadio
 claude plugin update pyrefly@lafcadio
+claude plugin update ty@lafcadio
 claude plugin update oxc@lafcadio
 
 # Codex: refresh the GitHub marketplace, then reinstall the desired plugins
 codex plugin marketplace upgrade lafcadio
 codex plugin add ruff@lafcadio
 codex plugin add pyrefly@lafcadio
+codex plugin add ty@lafcadio
 codex plugin add oxc@lafcadio
 
 # OpenCode: rerun the relevant curl command from the installation section
@@ -113,5 +118,5 @@ codex plugin remove ruff@lafcadio
 rm ~/.config/opencode/plugins/lafcadio-ruff.ts
 ```
 
-Repeat with `pyrefly` or `oxc` as needed. For project-local OpenCode plugins,
-remove the file from `.opencode/plugins/` instead.
+Repeat with `pyrefly`, `ty`, or `oxc` as needed. For project-local OpenCode
+plugins, remove the file from `.opencode/plugins/` instead.

@@ -2,10 +2,11 @@ import { expect, test } from "bun:test";
 import { OxcPlugin } from "../opencode/oxc";
 import { PyreflyPlugin } from "../opencode/pyrefly";
 import { RuffPlugin } from "../opencode/ruff";
+import { TyPlugin } from "../opencode/ty";
 
 test("plugins add native formatter and LSP configuration", async () => {
   const config: any = { formatter: false, lsp: false };
-  for (const create of [RuffPlugin, PyreflyPlugin, OxcPlugin]) {
+  for (const create of [RuffPlugin, PyreflyPlugin, TyPlugin, OxcPlugin]) {
     const plugin = await create();
     await plugin.config(config);
   }
@@ -14,6 +15,7 @@ test("plugins add native formatter and LSP configuration", async () => {
   expect(config.formatter["ruff-fix"].command).toEqual(["uvx", "ruff", "check", "--fix", "$FILE"]);
   expect(config.lsp.ruff.command).toEqual(["uvx", "ruff", "server", "--color", "never"]);
   expect(config.lsp.pyrefly.command).toEqual(["uvx", "pyrefly", "lsp", "--color", "never"]);
+  expect(config.lsp.ty.command).toEqual(["uvx", "ty", "server"]);
   expect(config.lsp.oxlint.command).toEqual(["bunx", "oxlint", "--lsp"]);
 });
 
@@ -45,7 +47,7 @@ test("Oxc formats framework files only where supported", async () => {
 });
 
 test("each plugin tells the agent how its tools affect files", async () => {
-  for (const create of [RuffPlugin, PyreflyPlugin, OxcPlugin]) {
+  for (const create of [RuffPlugin, PyreflyPlugin, TyPlugin, OxcPlugin]) {
     const plugin = await create();
     const output = { system: [] as string[] };
     await plugin["experimental.chat.system.transform"]({}, output);
