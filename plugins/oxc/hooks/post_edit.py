@@ -76,15 +76,33 @@ def run(command: list[str]) -> None:
         raise RuntimeError(detail or f"command failed: {' '.join(command)}")
 
 
+def run_with_vp_fallback(primary: list[str], fallback: list[str], marker: str) -> None:
+    # vite-plus ships LSP-only oxfmt/oxlint wrappers whose error points at the vp CLI
+    try:
+        run(primary)
+    except RuntimeError as error:
+        if marker not in str(error):
+            raise
+        run(fallback)
+
+
 def main() -> int:
     try:
         files = changed_files(json.load(sys.stdin))
         format_files = [str(path) for path in files if path.suffix in FORMAT_EXTENSIONS]
         lint_files = [str(path) for path in files]
         if format_files:
-            run(["bunx", "oxfmt", *format_files])
+            run_with_vp_fallback(
+                ["bunx", "oxfmt", *format_files],
+                ["bunx", "vp", "fmt", *format_files, "--write"],
+                "vp fmt",
+            )
         if lint_files:
-            run(["bunx", "oxlint", "--fix", *lint_files])
+            run_with_vp_fallback(
+                ["bunx", "oxlint", "--fix", *lint_files],
+                ["bunx", "vp", "lint", "--fix", *lint_files],
+                "vp lint",
+            )
         return 0
     except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as error:
         print(f"Oxc post-edit hook failed: {error}", file=sys.stderr)

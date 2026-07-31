@@ -1,6 +1,6 @@
 {
   "name": "oxc",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Format frontend files with Oxfmt and lint them with Oxlint.",
   "author": {
     "name": "Andrew Tec"

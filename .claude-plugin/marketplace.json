@@ -48,7 +48,7 @@
     {
       "name": "oxc",
       "description": "oxc tools for JS/TS",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Andrew Tec"
       },
