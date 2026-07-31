@@ -1,0 +1,21 @@
+{
+  "name": "oxc",
+  "version": "1.0.0",
+  "description": "Format frontend files with Oxfmt and lint them with Oxlint.",
+  "author": {
+    "name": "Andrew Tec"
+  },
+  "homepage": "https://github.com/tecandrew/lafcadio-cc#install-from-github",
+  "repository": "https://github.com/tecandrew/lafcadio-cc",
+  "keywords": ["javascript", "typescript", "oxfmt", "oxlint", "lsp"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Oxc",
+    "shortDescription": "Automatic frontend formatting and safe lint fixes.",
+    "longDescription": "Formats supported frontend edits with Oxfmt, applies safe Oxlint fixes, and reports remaining diagnostics to Codex.",
+    "developerName": "Andrew Tec",
+    "category": "Developer Tools",
+    "capabilities": ["Write"],
+    "defaultPrompt": "Format and lint the frontend files in this project with Oxc."
+  }
+}

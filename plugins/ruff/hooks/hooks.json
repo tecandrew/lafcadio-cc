@@ -6,13 +6,8 @@
         "hooks": [
           {
             "type": "command",
-            "if": "Edit(*.py)",
-            "command": "jq -r '.tool_input.file_path' | xargs -I{} uvx ruff check --fix {} >&2 || exit 2"
-          },
-          {
-            "type": "command",
-            "if": "Write(*.py)",
-            "command": "jq -r '.tool_input.file_path' | xargs -I{} uvx ruff check --fix {} >&2 || exit 2"
+            "command": "python3 \"$CLAUDE_PLUGIN_ROOT/hooks/post_edit.py\"",
+            "timeout": 120
           }
         ]
       }

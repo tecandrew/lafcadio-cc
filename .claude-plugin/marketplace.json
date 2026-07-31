@@ -5,7 +5,7 @@
     "email": "contact@enjoi.dev"
   },
   "metadata": {
-    "description": "lafcadio's CC plugins",
+    "description": "Ruff, Pyrefly, Ty, and Oxc plugins for Claude Code",
     "version": "1.0.0"
   },
   "plugins": [

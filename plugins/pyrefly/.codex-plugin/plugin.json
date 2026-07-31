@@ -1,0 +1,21 @@
+{
+  "name": "pyrefly",
+  "version": "1.0.0",
+  "description": "Type-check Python files with Pyrefly after agent edits.",
+  "author": {
+    "name": "Andrew Tec"
+  },
+  "homepage": "https://github.com/tecandrew/lafcadio-cc#install-from-github",
+  "repository": "https://github.com/tecandrew/lafcadio-cc",
+  "keywords": ["python", "pyrefly", "type-checker", "lsp"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Pyrefly",
+    "shortDescription": "Automatic Python type diagnostics.",
+    "longDescription": "Runs Pyrefly after Python edits and reports type diagnostics to Codex.",
+    "developerName": "Andrew Tec",
+    "category": "Developer Tools",
+    "capabilities": ["Read"],
+    "defaultPrompt": "Type-check the Python files in this project with Pyrefly."
+  }
+}

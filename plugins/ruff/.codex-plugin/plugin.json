@@ -1,0 +1,21 @@
+{
+  "name": "ruff",
+  "version": "1.0.0",
+  "description": "Format and lint Python files with Ruff after agent edits.",
+  "author": {
+    "name": "Andrew Tec"
+  },
+  "homepage": "https://github.com/tecandrew/lafcadio-cc#install-from-github",
+  "repository": "https://github.com/tecandrew/lafcadio-cc",
+  "keywords": ["python", "ruff", "formatter", "linter"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Ruff",
+    "shortDescription": "Automatic Python formatting and safe lint fixes.",
+    "longDescription": "Formats Python edits with Ruff, applies safe lint fixes, and reports remaining diagnostics to Codex.",
+    "developerName": "Andrew Tec",
+    "category": "Developer Tools",
+    "capabilities": ["Write"],
+    "defaultPrompt": "Format and lint the Python files in this project with Ruff."
+  }
+}

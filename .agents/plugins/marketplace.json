@@ -1,0 +1,44 @@
+{
+  "name": "lafcadio",
+  "interface": {
+    "displayName": "Lafcadio"
+  },
+  "plugins": [
+    {
+      "name": "ruff",
+      "source": {
+        "source": "local",
+        "path": "./plugins/ruff"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "pyrefly",
+      "source": {
+        "source": "local",
+        "path": "./plugins/pyrefly"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    },
+    {
+      "name": "oxc",
+      "source": {
+        "source": "local",
+        "path": "./plugins/oxc"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}
