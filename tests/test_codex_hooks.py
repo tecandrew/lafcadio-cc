@@ -107,14 +107,13 @@ class CodexHookTests(unittest.TestCase):
         self.assertIn("Page.astro", lint_command)
         self.assertNotIn("notes.md", lint_command)
 
-    def test_rejects_paths_outside_the_project(self) -> None:
+    def test_skips_paths_outside_the_project(self) -> None:
         outside = self.root / "outside.py"
         outside.write_text("value = 1\n")
 
         result = self.run_hook("pyrefly", {"command": "*** Update File: ../outside.py"})
 
-        self.assertEqual(result.returncode, 2)
-        self.assertIn("refusing path outside repository", result.stderr)
+        self.assertEqual(result.returncode, 0, result.stderr)
         self.assertEqual(self.commands(), [])
 
     def test_command_failure_is_returned_as_hook_feedback(self) -> None:

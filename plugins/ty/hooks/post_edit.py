@@ -8,7 +8,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import cast
 
 HEADERS = ("*** Add File: ", "*** Update File: ", "*** Move to: ")
 EXTENSIONS = {".py", ".pyi"}
@@ -28,10 +27,8 @@ def changed_files(payload: dict[str, object]) -> list[Path]:
     except OSError:
         root = cwd
 
-    raw_tool_input = payload.get("tool_input")
-    if not isinstance(raw_tool_input, dict):
-        return []
-    tool_input = cast(dict[str, object], raw_tool_input)
+    tool_input = payload.get("tool_input")
+    tool_input = tool_input if isinstance(tool_input, dict) else {}
     raw_paths: list[str] = []
     file_path = tool_input.get("file_path")
     if isinstance(file_path, str):
@@ -48,10 +45,9 @@ def changed_files(payload: dict[str, object]) -> list[Path]:
     for raw_path in dict.fromkeys(raw_paths):
         path = Path(raw_path)
         path = (path if path.is_absolute() else cwd / path).resolve()
-        try:
-            path.relative_to(root)
-        except ValueError as error:
-            raise ValueError(f"refusing path outside repository: {raw_path}") from error
+        if not path.is_relative_to(root):
+            # outside the repo (scratchpad, /tmp): not ours to touch
+            continue
         if path.is_file() and path.suffix in EXTENSIONS:
             files.append(path)
     return files
@@ -70,7 +66,7 @@ def main() -> int:
             )
             raise RuntimeError(detail or f"command failed: {' '.join(command)}")
         return 0
-    except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as error:
+    except (OSError, ValueError, RuntimeError) as error:
         print(f"Ty post-edit hook failed: {error}", file=sys.stderr)
         return 2
 

@@ -1,4 +1,4 @@
-type Entry = { disabled?: boolean; command?: string[]; extensions?: string[] };
+type Entry = { command?: string[]; extensions?: string[] };
 type Config = { lsp?: boolean | Record<string, Entry> };
 
 const PYTHON = [".py", ".pyi"];

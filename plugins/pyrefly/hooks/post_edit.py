@@ -45,10 +45,9 @@ def changed_files(payload: dict[str, object]) -> list[Path]:
     for raw_path in dict.fromkeys(raw_paths):
         path = Path(raw_path)
         path = (path if path.is_absolute() else cwd / path).resolve()
-        try:
-            path.relative_to(root)
-        except ValueError as error:
-            raise ValueError(f"refusing path outside repository: {raw_path}") from error
+        if not path.is_relative_to(root):
+            # outside the repo (scratchpad, /tmp): not ours to touch
+            continue
         if path.is_file() and path.suffix in EXTENSIONS:
             files.append(path)
     return files
@@ -67,7 +66,7 @@ def main() -> int:
             )
             raise RuntimeError(detail or f"command failed: {' '.join(command)}")
         return 0
-    except (OSError, ValueError, RuntimeError, json.JSONDecodeError) as error:
+    except (OSError, ValueError, RuntimeError) as error:
         print(f"Pyrefly post-edit hook failed: {error}", file=sys.stderr)
         return 2
 
