@@ -5,7 +5,7 @@ description: Format, lint, fix, or review Python files with Ruff. Use for Python
 
 # Ruff
 
-After Python edits, the bundled hook runs `uvx ruff format` and `uvx ruff check --fix` on changed `.py` and `.pyi` files.
+After Python edits, the bundled hook prefers Ruff from the nearest project `.venv`, then falls back to `uvx ruff`. It formats and applies safe lint fixes to changed `.py` and `.pyi` files.
 
 For an explicit repository-wide check, run:
 

@@ -62,6 +62,28 @@ class CodexHookTests(unittest.TestCase):
         self.assertEqual(commands[0], f"uvx\truff\tformat\t{target.resolve()}")
         self.assertEqual(commands[1], f"uvx\truff\tcheck\t--fix\t{target.resolve()}")
 
+    def test_ruff_prefers_project_environment(self) -> None:
+        target = self.project / "typed.py"
+        target.write_text("value: int = 1\n")
+        executable = (
+            self.project
+            / ".venv"
+            / ("Scripts/ruff.exe" if os.name == "nt" else "bin/ruff")
+        )
+        executable.parent.mkdir(parents=True)
+        executable.symlink_to(self.root / "bin" / "runner")
+
+        result = self.run_hook("ruff", {"file_path": str(target)})
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.commands(),
+            [
+                f"ruff\tformat\t{target.resolve()}",
+                f"ruff\tcheck\t--fix\t{target.resolve()}",
+            ],
+        )
+
     def test_pyrefly_parses_move_and_deduplicates_paths(self) -> None:
         target = self.project / "new name.py"
         target.write_text("value: int = 1\n")

@@ -13,7 +13,7 @@ HEADERS = ("*** Add File: ", "*** Update File: ", "*** Move to: ")
 EXTENSIONS = {".py", ".pyi"}
 
 
-def changed_files(payload: dict[str, object]) -> list[Path]:
+def changed_files(payload: dict[str, object]) -> tuple[Path, list[Path]]:
     cwd = Path(str(payload.get("cwd") or os.getcwd())).resolve()
     try:
         result = subprocess.run(
@@ -50,7 +50,18 @@ def changed_files(payload: dict[str, object]) -> list[Path]:
             continue
         if path.is_file() and path.suffix in EXTENSIONS:
             files.append(path)
-    return files
+    return root, files
+
+
+def ruff_command(path: Path, root: Path) -> tuple[str, ...]:
+    executable = Path("Scripts/ruff.exe" if os.name == "nt" else "bin/ruff")
+    for parent in path.parents:
+        candidate = parent / ".venv" / executable
+        if candidate.is_file():
+            return (str(candidate),)
+        if parent == root:
+            break
+    return ("uvx", "ruff")
 
 
 def run(command: list[str]) -> None:
@@ -64,12 +75,15 @@ def run(command: list[str]) -> None:
 
 def main() -> int:
     try:
-        files = changed_files(json.load(sys.stdin))
+        root, files = changed_files(json.load(sys.stdin))
         if not files:
             return 0
-        paths = [str(path) for path in files]
-        run(["uvx", "ruff", "format", *paths])
-        run(["uvx", "ruff", "check", "--fix", *paths])
+        groups: dict[tuple[str, ...], list[str]] = {}
+        for path in files:
+            groups.setdefault(ruff_command(path, root), []).append(str(path))
+        for command, paths in groups.items():
+            run([*command, "format", *paths])
+            run([*command, "check", "--fix", *paths])
         return 0
     except (OSError, ValueError, RuntimeError) as error:
         print(f"Ruff post-edit hook failed: {error}", file=sys.stderr)
