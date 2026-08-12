@@ -12,7 +12,7 @@
     {
       "name": "ruff",
       "description": "ruff lsp and hook",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Andrew Tec"
       },
@@ -24,7 +24,7 @@
     {
       "name": "pyrefly",
       "description": "pyrefly lsp",
-      "version": "1.0.0",
+      "version": "1.0.1",
       "author": {
         "name": "Andrew Tec"
       },
@@ -48,7 +48,7 @@
     {
       "name": "oxc",
       "description": "oxc tools for JS/TS",
-      "version": "1.0.1",
+      "version": "1.0.2",
       "author": {
         "name": "Andrew Tec"
       },

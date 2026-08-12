@@ -1,6 +1,6 @@
 {
   "name": "ruff",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Format and lint Python files with Ruff after agent edits.",
   "author": {
     "name": "Andrew Tec"
