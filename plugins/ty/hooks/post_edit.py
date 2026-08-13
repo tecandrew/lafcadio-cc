@@ -13,7 +13,7 @@ HEADERS = ("*** Add File: ", "*** Update File: ", "*** Move to: ")
 EXTENSIONS = {".py", ".pyi"}
 
 
-def changed_files(payload: dict[str, object]) -> list[Path]:
+def changed_files(payload: dict[str, object]) -> tuple[Path, list[Path]]:
     cwd = Path(str(payload.get("cwd") or os.getcwd())).resolve()
     try:
         result = subprocess.run(
@@ -50,21 +50,53 @@ def changed_files(payload: dict[str, object]) -> list[Path]:
             continue
         if path.is_file() and path.suffix in EXTENSIONS:
             files.append(path)
-    return files
+    return root, files
+
+
+def ty_project(path: Path, root: Path) -> Path:
+    for parent in path.parents:
+        if any(
+            (parent / marker).exists()
+            for marker in ("ty.toml", "pyproject.toml", ".venv")
+        ):
+            return parent
+        if parent == root:
+            break
+    return root
+
+
+def ty_command(path: Path, root: Path) -> tuple[str, ...]:
+    executable = Path("Scripts/ty.exe" if os.name == "nt" else "bin/ty")
+    for parent in path.parents:
+        candidate = parent / ".venv" / executable
+        if candidate.is_file():
+            return (str(candidate),)
+        if parent == root:
+            break
+    return ("uvx", "ty")
 
 
 def main() -> int:
     try:
-        files = changed_files(json.load(sys.stdin))
+        root, files = changed_files(json.load(sys.stdin))
         if not files:
             return 0
-        command = ["uvx", "ty", "check", *(str(path) for path in files)]
-        result = subprocess.run(command, capture_output=True, text=True, check=False)
-        if result.returncode:
-            detail = "\n".join(
-                part.strip() for part in (result.stdout, result.stderr) if part.strip()
+        groups: dict[tuple[tuple[str, ...], Path], list[str]] = {}
+        for path in files:
+            project = ty_project(path, root)
+            groups.setdefault((ty_command(path, root), project), []).append(str(path))
+        for (command, project), paths in groups.items():
+            invocation = [*command, "check", "--project", str(project), *paths]
+            result = subprocess.run(
+                invocation, capture_output=True, text=True, check=False
             )
-            raise RuntimeError(detail or f"command failed: {' '.join(command)}")
+            if result.returncode:
+                detail = "\n".join(
+                    part.strip()
+                    for part in (result.stdout, result.stderr)
+                    if part.strip()
+                )
+                raise RuntimeError(detail or f"command failed: {' '.join(invocation)}")
         return 0
     except (OSError, ValueError, RuntimeError) as error:
         print(f"Ty post-edit hook failed: {error}", file=sys.stderr)

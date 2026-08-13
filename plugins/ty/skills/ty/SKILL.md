@@ -5,7 +5,7 @@ description: Type-check, diagnose, or review Python files with Ty. Use for Pytho
 
 # Ty
 
-After Python edits, the bundled hook runs `uvx ty check` on changed `.py` and `.pyi` files and reports errors without rewriting them.
+After Python edits, the bundled hook prefers Ty from the nearest project `.venv`, then falls back to `uvx ty`. It checks changed `.py` and `.pyi` files against their nearest project and reports errors without rewriting them.
 
 For an explicit repository-wide check, run:
 

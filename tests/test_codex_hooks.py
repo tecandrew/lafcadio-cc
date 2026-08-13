@@ -110,7 +110,32 @@ class CodexHookTests(unittest.TestCase):
         result = self.run_hook("ty", {"file_path": str(target)})
 
         self.assertEqual(result.returncode, 0, result.stderr)
-        self.assertEqual(self.commands(), [f"uvx\tty\tcheck\t{target.resolve()}"])
+        self.assertEqual(
+            self.commands(),
+            [
+                f"uvx\tty\tcheck\t--project\t{self.project.resolve()}\t{target.resolve()}"
+            ],
+        )
+
+    def test_ty_prefers_nested_project_environment(self) -> None:
+        backend = self.project / "src" / "backend"
+        backend.mkdir(parents=True)
+        (backend / "pyproject.toml").write_text("[project]\nname = 'backend'\n")
+        target = backend / "typed.py"
+        target.write_text("value: int = 1\n")
+        executable = (
+            backend / ".venv" / ("Scripts/ty.exe" if os.name == "nt" else "bin/ty")
+        )
+        executable.parent.mkdir(parents=True)
+        executable.symlink_to(self.root / "bin" / "runner")
+
+        result = self.run_hook("ty", {"file_path": str(target)})
+
+        self.assertEqual(result.returncode, 0, result.stderr)
+        self.assertEqual(
+            self.commands(),
+            [f"ty\tcheck\t--project\t{backend.resolve()}\t{target.resolve()}"],
+        )
 
     def test_oxc_lints_astro_without_formatting_it(self) -> None:
         names = ("app.ts", "View.vue", "Widget.svelte", "Page.astro", "notes.md")
