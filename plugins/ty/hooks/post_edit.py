@@ -1,7 +1,4 @@
-#!/usr/bin/env python3
 """Type-check Python files changed by an agent edit."""
-
-from __future__ import annotations
 
 import json
 import os
@@ -14,7 +11,7 @@ EXTENSIONS = {".py", ".pyi"}
 
 
 def changed_files(payload: dict[str, object]) -> tuple[Path, list[Path]]:
-    cwd = Path(str(payload.get("cwd") or os.getcwd())).resolve()
+    cwd = Path(str(payload.get("cwd") or Path.cwd())).resolve()
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],
@@ -79,8 +76,6 @@ def ty_command(path: Path, root: Path) -> tuple[str, ...]:
 def main() -> int:
     try:
         root, files = changed_files(json.load(sys.stdin))
-        if not files:
-            return 0
         groups: dict[tuple[tuple[str, ...], Path], list[str]] = {}
         for path in files:
             project = ty_project(path, root)

@@ -1,5 +1,3 @@
-from __future__ import annotations
-
 import json
 import os
 import subprocess
@@ -87,15 +85,13 @@ class CodexHookTests(unittest.TestCase):
     def test_pyrefly_parses_move_and_deduplicates_paths(self) -> None:
         target = self.project / "new name.py"
         target.write_text("value: int = 1\n")
-        patch = "\n".join(
-            (
-                "*** Begin Patch",
-                "*** Update File: old.py",
-                "*** Move to: new name.py",
-                "*** Update File: new name.py",
-                "*** Delete File: deleted.py",
-                "*** End Patch",
-            )
+        patch = (
+            "*** Begin Patch\n"
+            "*** Update File: old.py\n"
+            "*** Move to: new name.py\n"
+            "*** Update File: new name.py\n"
+            "*** Delete File: deleted.py\n"
+            "*** End Patch"
         )
 
         result = self.run_hook("pyrefly", {"command": patch})

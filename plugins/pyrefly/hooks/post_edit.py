@@ -1,10 +1,6 @@
-#!/usr/bin/env python3
 """Type-check Python files changed by an agent edit."""
 
-from __future__ import annotations
-
 import json
-import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +10,7 @@ EXTENSIONS = {".py", ".pyi"}
 
 
 def changed_files(payload: dict[str, object]) -> list[Path]:
-    cwd = Path(str(payload.get("cwd") or os.getcwd())).resolve()
+    cwd = Path(str(payload.get("cwd") or Path.cwd())).resolve()
     try:
         result = subprocess.run(
             ["git", "rev-parse", "--show-toplevel"],

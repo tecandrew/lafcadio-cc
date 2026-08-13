@@ -29,9 +29,4 @@ export const OxcPlugin = async () => ({
     };
     config.lsp = lsp;
   },
-  "experimental.chat.system.transform": async (_input: unknown, output: { system: string[] }) => {
-    output.system.push(
-      "For JavaScript, TypeScript, Vue, Svelte, and Astro reads and edits, use Oxc diagnostics. Oxfmt and safe Oxlint fixes run automatically where supported; Astro is linted but not formatted.",
-    );
-  },
 });

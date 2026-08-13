@@ -30,9 +30,4 @@ export const RuffPlugin = async () => ({
     };
     config.lsp = lsp;
   },
-  "experimental.chat.system.transform": async (_input: unknown, output: { system: string[] }) => {
-    output.system.push(
-      "For Python reads and edits, use Ruff conventions. Ruff formats changed files and applies safe lint fixes automatically; run `uvx ruff format --check .` and `uvx ruff check .` for explicit checks.",
-    );
-  },
 });

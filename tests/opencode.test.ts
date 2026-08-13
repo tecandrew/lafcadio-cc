@@ -45,12 +45,3 @@ test("Oxc formats framework files only where supported", async () => {
   expect(config.formatter["oxlint-fix"].extensions).toContain(".astro");
   expect(config.lsp.oxlint.extensions).toContain(".astro");
 });
-
-test("each plugin tells the agent how its tools affect files", async () => {
-  for (const create of [RuffPlugin, PyreflyPlugin, TyPlugin, OxcPlugin]) {
-    const plugin = await create();
-    const output = { system: [] as string[] };
-    await plugin["experimental.chat.system.transform"]({}, output);
-    expect(output.system).toHaveLength(1);
-  }
-});
