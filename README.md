@@ -14,6 +14,7 @@ Claude Code, Codex, and OpenCode.
 
 - [uv](https://docs.astral.sh/uv/) for `uvx ruff`, `uvx pyrefly`, and `uvx ty`
 - [Bun](https://bun.sh/) for `bunx oxfmt` and `bunx oxlint`
+- Python 3 on `PATH` as `python3`, which runs the post-edit hooks in every harness
 
 The first tool run may need network access. Project Ruff, Pyrefly, Oxfmt, and
 Oxlint configuration is respected.
@@ -58,31 +59,41 @@ the agent.
 
 ### OpenCode
 
-OpenCode does not have a Git marketplace command. Install directly from this
-GitHub repository into OpenCode's global plugin directory:
+These plugins target OpenCode V2. OpenCode has no Git marketplace command, and
+the plugins share the Python hooks in `plugins/`, so clone the repository and
+point OpenCode at the plugin directories:
 
 ```sh
-mkdir -p ~/.config/opencode/plugins
-curl -fsSLo ~/.config/opencode/plugins/lafcadio-ruff.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ruff.ts
-curl -fsSLo ~/.config/opencode/plugins/lafcadio-pyrefly.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/pyrefly.ts
-curl -fsSLo ~/.config/opencode/plugins/lafcadio-ty.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ty.ts
-curl -fsSLo ~/.config/opencode/plugins/lafcadio-oxc.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/oxc.ts
+git clone https://github.com/tecandrew/lafcadio-cc ~/.local/share/lafcadio-cc
 ```
 
-For one project instead, download them into its native project plugin
-directory:
+Then add the plugins you want to `plugins` in `~/.config/opencode/opencode.json`,
+or in a project's `opencode.json` to enable them for one project. Use absolute
+paths:
 
-```sh
-mkdir -p .opencode/plugins
-curl -fsSLo .opencode/plugins/lafcadio-ruff.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ruff.ts
-curl -fsSLo .opencode/plugins/lafcadio-pyrefly.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/pyrefly.ts
-curl -fsSLo .opencode/plugins/lafcadio-ty.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/ty.ts
-curl -fsSLo .opencode/plugins/lafcadio-oxc.ts https://raw.githubusercontent.com/tecandrew/lafcadio-cc/main/opencode/oxc.ts
+```jsonc
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": [
+    "/Users/you/.local/share/lafcadio-cc/opencode/ruff",
+    "/Users/you/.local/share/lafcadio-cc/opencode/pyrefly",
+    "/Users/you/.local/share/lafcadio-cc/opencode/ty",
+    "/Users/you/.local/share/lafcadio-cc/opencode/oxc"
+  ]
+}
 ```
 
-Restart OpenCode after installation. The plugins register native OpenCode LSP
-and formatter configuration automatically. To test diagnostics, run
-`opencode debug lsp diagnostics path/to/file.py` inside a project.
+OpenCode reloads plugins when the config changes. After each `edit`, `write`,
+or `patch`, the plugins run the same hooks as Claude Code and Codex, and any
+diagnostics are appended to the tool result.
+
+OpenCode V2 does not run language servers, so these plugins don't register any.
+For formatting on save, OpenCode's built-in `ruff` and `oxfmt` formatters work
+when you set `"formatter": true` and the tools are installed in the project.
+
+If you installed the older single-file plugins (`lafcadio-*.ts` in
+`~/.config/opencode/plugins/` or `.opencode/plugins/`), delete them. They use
+the V1 plugin API and do not run in V2.
 
 Oxfmt supports Vue directly. Svelte formatting also requires the project's
 `svelte` package and Oxfmt's `svelte` option. Astro is linted by Oxlint but is
@@ -105,7 +116,8 @@ codex plugin add pyrefly@lafcadio
 codex plugin add ty@lafcadio
 codex plugin add oxc@lafcadio
 
-# OpenCode: rerun the relevant curl command from the installation section
+# OpenCode: pull the clone; OpenCode reloads plugins on the next config change or /reload
+git -C ~/.local/share/lafcadio-cc pull
 ```
 
 Start a new agent session after updating.
@@ -115,8 +127,7 @@ Start a new agent session after updating.
 ```sh
 claude plugin uninstall ruff@lafcadio
 codex plugin remove ruff@lafcadio
-rm ~/.config/opencode/plugins/lafcadio-ruff.ts
 ```
 
-Repeat with `pyrefly`, `ty`, or `oxc` as needed. For project-local OpenCode
-plugins, remove the file from `.opencode/plugins/` instead.
+Repeat with `pyrefly`, `ty`, or `oxc` as needed. For OpenCode, remove the
+plugin's entry from `plugins` in `opencode.json`.
